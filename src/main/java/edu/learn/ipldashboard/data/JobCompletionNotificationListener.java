@@ -41,7 +41,7 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
             Map<String, Long> teamWithMatchCount = secondInnTeamList
                     .stream()
                     .collect(Collectors.toMap(
-                            e -> e.getTeamName(),
+                            TeamMatchCount::getTeamName,
                             e -> e.getMatchCount() +
                                     getCount(firstInnTeamList, e.getTeamName())
                     ));
@@ -50,15 +50,15 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
                     firstInnTeamList.stream()
                         .filter(team -> !teamWithMatchCount.containsKey(team.getTeamName()))
                         .collect(Collectors.toMap(
-                            e -> e.getTeamName(),
-                            e -> e.getMatchCount() +
+                                TeamMatchCount::getTeamName,
+                                e -> e.getMatchCount() +
                                     getCount(secondInnTeamList, e.getTeamName())
                         ))
             );
 
             teamWithMatchCount.entrySet().stream()
                     .map((e) -> new Team(e.getKey(), e.getValue(), getCount(winnerTeamList, e.getKey()))).
-                    forEach(t -> teamRepository.save(t));
+                    forEach(teamRepository::save);
 
         }
     }
