@@ -3,6 +3,8 @@ package edu.learn.ipldashboard.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Transient;
+import java.util.List;
 
 @Entity
 public class Team {
@@ -14,6 +16,9 @@ public class Team {
     private String name;
     private Long totalMatchPlayed;
     private Long totalWins;
+
+    @Transient
+    private List<Match> matchList;
 
     public Team() { }
     public Team(String name, Long totalMatchPlayed, Long totalWins) {
@@ -52,6 +57,14 @@ public class Team {
 
     public void setTotalWins(Long totalWins) {
         this.totalWins = totalWins;
+    }
+
+    public List<Match> getMatchList() {
+        return matchList;
+    }
+
+    public void setMatchList(List<Match> matchList) {
+        this.matchList = matchList;
     }
 
     @Override
