@@ -50,7 +50,7 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
     }
 
     default List<Match> getLatestMatchListByTeamName(String teamName) {
-        Pageable pageable = PageRequest.of(0, 5);
+        Pageable pageable = PageRequest.of(0, 4);
         return findMatchByTeamToBatFirstInnOrTeamToBatSecondInnOrderByMatchDateDesc(teamName, teamName, pageable);
     }
 }

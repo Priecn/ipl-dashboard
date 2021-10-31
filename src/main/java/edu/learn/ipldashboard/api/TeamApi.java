@@ -31,4 +31,9 @@ public class TeamApi {
     public List<Match> getTeam(@PathVariable String teamName, @RequestParam int year) {
         return matchRepository.getTeamMatchListForYear(teamName, year);
     }
+
+    @GetMapping(path = "/team")
+    public List<Team> getTeam() {
+        return teamRepository.findAll();
+    }
 }
