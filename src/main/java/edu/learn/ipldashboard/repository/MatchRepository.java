@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +26,28 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
 
     // List<Match> findTop5MatchByTeamToBatFirstInnOrTeamToBatSecondInnOrderByMatchDateDesc(String firstTeam, String secondTeam);
     List<Match> findMatchByTeamToBatFirstInnOrTeamToBatSecondInnOrderByMatchDateDesc(String firstTeam, String secondTeam, Pageable pageable);
+
+
+    /*List<Match> findMatchByTeamToBatFirstInnAndMatchDateBetweenOrTeamToBatSecondInnAndMatchDateBetweenOrderByMatchDateDesc(
+            String firstTeam, LocalDate start, LocalDate end,
+            String secondTeam, LocalDate start1, LocalDate end1);
+    */
+
+    @Query("SELECT m FROM Match m WHERE " +
+            "( m.teamToBatFirstInn = :teamName OR m.teamToBatSecondInn = :teamName)" +
+            " AND m.matchDate BETWEEN :start AND :end ORDER BY m.matchDate DESC")
+    List<Match> findMatchByTeamBetweenDate(String teamName, LocalDate start, LocalDate end);
+
+    default List<Match> getTeamMatchListForYear(String teamName, int year) {
+        LocalDate startDate = LocalDate.of(year, 1, 1);
+        LocalDate endDate = LocalDate.of(year+1, 1, 1);
+
+        return findMatchByTeamBetweenDate(teamName, startDate, endDate);
+
+        /*return findMatchByTeamToBatFirstInnAndMatchDateBetweenOrTeamToBatSecondInnAndMatchDateBetweenOrderByMatchDateDesc(
+                teamName, startDate, endDate,
+                teamName, startDate, endDate);*/
+    }
 
     default List<Match> getLatestMatchListByTeamName(String teamName) {
         Pageable pageable = PageRequest.of(0, 5);
